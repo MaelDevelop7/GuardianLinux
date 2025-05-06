@@ -1,0 +1,50 @@
+# Bytecode Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Dossier d'installation des paquets Python
+env/
+venv/
+ENV/
+.venv/
+
+# Fichiers de configuration d'IDE
+.vscode/
+.idea/
+
+# Fichiers de configuration système
+.DS_Store
+Thumbs.db
+
+# Fichiers de logs
+*.log
+
+# Fichiers de base de données SQLite
+*.sqlite3
+
+# Dossiers de distribution et archives
+build/
+dist/
+*.egg-info/
+
+# Configuration de tests
+nosetests.xml
+coverage.xml
+*.cover
+*.hypothesis/
+
+# Pytest cache
+.cache/
+
+# Environnements virtuels
+*.env
+
+# Fichiers de configuration et secrets
+*.env
+*.json
+*.yml
+
+# Fichiers générés par certains outils (par ex. Jupyter)
+.ipynb_checkpoints/
