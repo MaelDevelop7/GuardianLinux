@@ -1,0 +1,10 @@
+[Unit]
+Description=GuardianLinux Parental Control
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/guardianlinux/core/monitor.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
