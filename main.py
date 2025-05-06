@@ -3,6 +3,7 @@ from tkinter import messagebox, simpledialog
 from auth import User
 import sqlite3
 import os
+from datetime import datetime
 
 DB_PATH = "config.db"
 user = User("admin", "root")  # Remplace "root" par le mot de passe choisi
@@ -16,6 +17,22 @@ def init_db():
     c.execute("CREATE TABLE IF NOT EXISTS time_limits (id INTEGER PRIMARY KEY, start TEXT, end TEXT)")
     conn.commit()
     conn.close()
+
+# Fonction pour vérifier si l'heure actuelle est dans les plages horaires définies
+def check_time_limits():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    
+    # Récupérer les horaires définis
+    time_limits = c.execute("SELECT start, end FROM time_limits").fetchall()
+    conn.close()
+
+    # Vérifier si l'heure actuelle est dans une des plages horaires
+    current_time = datetime.now().strftime('%H:%M')
+    for start, end in time_limits:
+        if start <= current_time <= end:
+            return True  # Dans la plage horaire, continuer à bloquer
+    return False  # Pas dans la plage horaire, ne pas bloquer
 
 # Interface principale
 class ParentalControlApp:
@@ -68,6 +85,24 @@ class ParentalControlApp:
             conn.commit()
             conn.close()
             messagebox.showinfo("Succès", f"Horaire {start} → {end} enregistré.")
+
+    def remove_site(self):
+        site = simpledialog.askstring("Site à supprimer", "Entrez l'URL à supprimer (ex: facebook.com):")
+        if site:
+            conn = sqlite3.connect(DB_PATH)
+            conn.execute("DELETE FROM blocked_sites WHERE url = ?", (site,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Succès", f"{site} supprimé de la liste des sites bloqués.")
+
+    def remove_app(self):
+        app = simpledialog.askstring("Application à supprimer", "Nom du binaire à supprimer (ex: discord, steam):")
+        if app:
+            conn = sqlite3.connect(DB_PATH)
+            conn.execute("DELETE FROM blocked_apps WHERE name = ?", (app,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Succès", f"{app} supprimé de la liste des applications bloquées.")
 
     def view_rules(self):
         conn = sqlite3.connect(DB_PATH)
